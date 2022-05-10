@@ -12,6 +12,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 /**
  * Элементарная реализация бота.
  */
+@Deprecated
 public class Bot extends TelegramLongPollingBot {
 
     private final static Logger LOG = LoggerFactory.getLogger(TelegramLongPollingBot.class);

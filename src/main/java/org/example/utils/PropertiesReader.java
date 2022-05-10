@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
-
+@Deprecated
 public class PropertiesReader implements Reader {
     private final static Logger LOG = LoggerFactory.getLogger(PropertiesReader.class);
 

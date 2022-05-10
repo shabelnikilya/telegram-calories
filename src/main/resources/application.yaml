@@ -1,0 +1,12 @@
+bot:
+  name: NewJavaProjectBot
+  token: 5125641276:AAHapXkDjTNrzatP0jtqrhOpTvbI330HRz8
+
+spring:
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5432/telegram_calories
+    username: postgres
+    password: password
+    driver-class-name: org.postgresql.Driver
+    jpa:
+      show-sql: true

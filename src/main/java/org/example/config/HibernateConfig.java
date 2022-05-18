@@ -31,7 +31,7 @@ public class HibernateConfig {
 
     @Bean
     public DataSource ds() {
-        LOG.info("INIT DATASOUTCE!");
+        LOG.info("INIT DATASOURCE!");
 
         BasicDataSource ds = new BasicDataSource();
         ds.setDriverClassName(driver);

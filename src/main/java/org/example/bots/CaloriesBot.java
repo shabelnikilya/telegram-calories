@@ -1,10 +1,9 @@
 package org.example.bots;
 
+import org.example.bots.send.SendAnswer;
 import org.example.models.Product;
-import org.example.parse.PairKayValueParse;
-import org.example.parse.Parse;
+import org.example.repository.MemStore;
 import org.example.service.Service;
-import org.example.service.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
@@ -19,12 +19,14 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 public class CaloriesBot extends TelegramLongPollingBot {
     private final static Logger LOG = LoggerFactory.getLogger(CaloriesBot.class);
     private final Service<Product> service;
-    private final Parse parse;
+    private final MemStore<SendAnswer> storeAnswer;
+
 
     @Autowired
-    public CaloriesBot(ProductService service, PairKayValueParse parse) {
+    public CaloriesBot(Service<Product> service, MemStore<SendAnswer> storeAnswer) {
         this.service = service;
-        this.parse = parse;
+        this.storeAnswer = storeAnswer;
+        storeAnswer.init();
     }
 
     @Value("${bot.token}")
@@ -40,18 +42,10 @@ public class CaloriesBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        StringBuilder str = new StringBuilder();
-        String message = update.getMessage().getText();
-        parse.makeParse(message);
-        if (!parse.validationsResult().isEmpty()) {
-            LOG.info("Отправлен ответ список ошибок!");
-            parse.validationsResult().forEach(valid -> str.append(valid.getText()).append(System.lineSeparator()));
-            parse.clear();
-        } else {
-            LOG.info("Отправлен корректный ответ!");
-            str.append("Парсинг прошел успешно!");
-        }
-        sendMsg(update.getMessage().getChatId().toString(), str.toString());
+        LOG.info("Сообщение принято!");
+        Message message = update.getMessage();
+        SendAnswer sendAnswer = storeAnswer.findByMessage(message.getText());
+        sendMsg(message.getChatId().toString(), sendAnswer.getAnswer());
     }
 
     @Override
@@ -61,12 +55,11 @@ public class CaloriesBot extends TelegramLongPollingBot {
 
     private void sendMsg(String chatId, String s) {
         SendMessage sendMessage = new SendMessage();
-        sendMessage.enableMarkdown(true);
         sendMessage.setChatId(chatId);
         sendMessage.setText(s);
-
         try {
             executeAsync(sendMessage);
+            LOG.info("Сообщение отправлено!");
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }

@@ -38,6 +38,5 @@ public class Product {
      * Калории на 100 грамм.
      */
     private int kcal;
-
 }
 

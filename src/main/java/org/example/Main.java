@@ -12,6 +12,7 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import java.lang.module.Configuration;
 
 /**
+ * проверка отправки изм на GH!
  * Точка старта приложения.
  */
 @Deprecated

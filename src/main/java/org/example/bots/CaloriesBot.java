@@ -42,6 +42,7 @@ public class CaloriesBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
+        System.out.println(update.getMessage().getFrom());
         LOG.info("Сообщение принято!");
         Message message = update.getMessage();
         SendAnswer sendAnswer = storeAnswer.findByMessage(message.getText());

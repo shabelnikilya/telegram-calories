@@ -3,6 +3,8 @@ package org.example.models;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Модель данных продуктов
@@ -38,5 +40,8 @@ public class Product {
      * Калории на 100 грамм.
      */
     private int kcal;
+
+    @ManyToMany(mappedBy = "products")
+    private List<Food> foods = new ArrayList<>();
 }
 

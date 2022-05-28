@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,4 +31,11 @@ public class User {
     private boolean isBot;
     @Column(name = "enable")
     private boolean enable;
+    @ManyToMany
+    @JoinTable(
+            name = "users_food",
+            joinColumns = @JoinColumn(name = "users_id"),
+            inverseJoinColumns = @JoinColumn(name = "food_id")
+    )
+    private List<Food> foods = new ArrayList<>();
 }

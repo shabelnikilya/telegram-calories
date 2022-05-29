@@ -26,7 +26,7 @@ public class Food {
     )
     private List<Product> products = new ArrayList<>();
     @ManyToMany(mappedBy = "foods")
-    private List<User> users = new ArrayList<>();
+    private List<UserDB> users = new ArrayList<>();
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "date_eat")
     private Date dateEat = new Date(System.currentTimeMillis());

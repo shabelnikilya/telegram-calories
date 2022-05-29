@@ -1,14 +1,14 @@
 package org.example.service;
 
-import org.example.models.User;
+import org.example.models.UserDB;
 
 public interface UserService {
 
-    User findByUserName(String userName);
+    UserDB findByUserName(String userName);
 
-    void save(User user);
+    void save(UserDB user);
 
-    void update(User user);
+    void update(UserDB user);
 
-    void remove(User user);
+    void remove(UserDB user);
 }

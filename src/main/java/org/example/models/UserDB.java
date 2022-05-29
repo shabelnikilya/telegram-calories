@@ -1,21 +1,20 @@
 package org.example.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Getter
 @Setter
 @Entity
 @Table(name = "users")
-public class User {
+public class UserDB {
     @Id
     @Column(name = "user_name", nullable = false)
     private String userName;
@@ -27,7 +26,7 @@ public class User {
     private int age;
     @Column(name = "weight")
     private float weight;
-    @Column(name = "isBot")
+    @Column(name = "isbot")
     private boolean isBot;
     @Column(name = "enable")
     private boolean enable;

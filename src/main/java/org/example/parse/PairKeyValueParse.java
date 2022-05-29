@@ -10,11 +10,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Component
-public class PairKayValueParse implements Parse {
-    private final static Logger LOG = LoggerFactory.getLogger(PairKayValueParse.class);
+public class PairKeyValueParse implements Parse {
+    private final static Logger LOG = LoggerFactory.getLogger(PairKeyValueParse.class);
     private final static String SPLIT_LINE = ";";
     private final static String SPLIT_KEY_VALUE = "=";
-    private final Map<String, Integer> params = new ConcurrentHashMap<>();
+    private final Map<String, String> params = new ConcurrentHashMap<>();
     private final List<ValidationObject> validations = new CopyOnWriteArrayList<>();
 
     @Override
@@ -28,7 +28,8 @@ public class PairKayValueParse implements Parse {
                         validateLine(line);
                         if (validations.isEmpty()) {
                             String[] pair = line.split(SPLIT_KEY_VALUE);
-                            params.put(pair[0], Integer.parseInt(pair[1]));
+                            LOG.info("Ключе=значение, которые запарсились: {}, {}", pair[0], pair[1]);
+                            params.put(pair[0], pair[1]);
                         }
                     });
         }
@@ -40,8 +41,13 @@ public class PairKayValueParse implements Parse {
     }
 
     @Override
-    public Map<String, Integer> getParams() {
+    public Map<String, String> getParams() {
         return this.params;
+    }
+
+    @Override
+    public String getValue(String key) {
+        return params.get(key);
     }
 
     @Override
@@ -67,16 +73,16 @@ public class PairKayValueParse implements Parse {
     private boolean checkKeyValue(String line) {
         String[] pairs = line.split(SPLIT_KEY_VALUE);
         return Objects.isNull(pairs[0]) || pairs[0].isEmpty() || Objects.isNull(pairs[1])
-                || pairs[1].isEmpty() || !isNumeric(pairs[1]);
+                || pairs[1].isEmpty();// || !isNumeric(pairs[1]);
     }
 
-    private boolean isNumeric(String value) {
-        try {
-            Integer.parseInt(value);
-        } catch (NumberFormatException e) {
-            LOG.info("Неверный формат значения! Значение - {}", value);
-            return false;
-        }
-        return true;
-    }
+//    private boolean isNumeric(String value) {
+//        try {
+//            Integer.parseInt(value);
+//        } catch (NumberFormatException e) {
+//            LOG.info("Неверный формат значения! Значение - {}", value);
+//            return false;
+//        }
+//        return true;
+//    }
 }

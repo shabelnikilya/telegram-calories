@@ -1,5 +1,7 @@
 package org.example.bots;
 
+import org.example.bots.reader.MessageReader;
+import org.example.bots.reader.RegistryUser;
 import org.example.bots.send.SendAnswer;
 import org.example.models.Product;
 import org.example.repository.MemStore;
@@ -15,17 +17,20 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.util.Objects;
+
 @Component
 public class CaloriesBot extends TelegramLongPollingBot {
     private final static Logger LOG = LoggerFactory.getLogger(CaloriesBot.class);
     private final Service<Product> service;
     private final MemStore<SendAnswer> storeAnswer;
-
+    private final MessageReader reader;
 
     @Autowired
-    public CaloriesBot(Service<Product> service, MemStore<SendAnswer> storeAnswer) {
+    public CaloriesBot(Service<Product> service, MemStore<SendAnswer> storeAnswer, RegistryUser reader) {
         this.service = service;
         this.storeAnswer = storeAnswer;
+        this.reader = reader;
         storeAnswer.init();
     }
 
@@ -42,11 +47,11 @@ public class CaloriesBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        System.out.println(update.getMessage().getFrom());
         LOG.info("Сообщение принято!");
         Message message = update.getMessage();
+        reader.readMessage(message);
         SendAnswer sendAnswer = storeAnswer.findByMessage(message.getText());
-        sendMsg(message.getChatId().toString(), sendAnswer.getAnswer());
+        sendMsg(message.getChatId().toString(), ifNullDefaultAnswer(sendAnswer).getAnswer());
     }
 
     @Override
@@ -64,5 +69,14 @@ public class CaloriesBot extends TelegramLongPollingBot {
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Если не найдено операции, отправляется дефолтный ответ
+     * @param sendAnswer проверяемый объект.
+     * @return объект содержащий ответ.
+     */
+    private SendAnswer ifNullDefaultAnswer(SendAnswer sendAnswer) {
+        return Objects.isNull(sendAnswer) ? storeAnswer.getDefaultMessage() : sendAnswer;
     }
 }

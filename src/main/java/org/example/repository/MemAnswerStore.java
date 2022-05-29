@@ -25,6 +25,7 @@ public class MemAnswerStore implements MemStore<SendAnswer> {
     public MemAnswerStore(ProductService service) {
         this.service = service;
     }
+
     @Override
     public void init() {
         LOG.info("Начата инициализация хранилища в ОП!");
@@ -37,6 +38,17 @@ public class MemAnswerStore implements MemStore<SendAnswer> {
     @Override
     public SendAnswer findByMessage(String message) {
         return store.get(message);
+    }
+
+    @Override
+    public SendAnswer getDefaultMessage() {
+        StringBuilder str = new StringBuilder();
+        str.append("Такой операции не существует или не корректна напечатана!")
+                .append(System.lineSeparator())
+                .append("Проверьте наличие/правильность операции")
+                .append(System.lineSeparator())
+                .append(store.get("menu").getAnswer());
+        return new SimpleTextAnswer(str.toString());
     }
 
     @Override

@@ -1,6 +1,6 @@
 package org.example.service;
 
-import org.example.models.User;
+import org.example.models.UserDB;
 import org.example.repository.UserRepository;
 import org.example.repository.UserRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,22 +16,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByUserName(String userName) {
+    public UserDB findByUserName(String userName) {
         return repository.findByUserName(userName);
     }
 
     @Override
-    public void save(User user) {
+    public void save(UserDB user) {
         repository.save(user);
     }
 
     @Override
-    public void update(User user) {
+    public void update(UserDB user) {
         repository.update(user);
     }
 
     @Override
-    public void remove(User user) {
+    public void remove(UserDB user) {
         repository.delete(user);
     }
 }

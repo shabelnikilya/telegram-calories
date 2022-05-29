@@ -9,7 +9,9 @@ public interface Parse {
 
     void makeParse(String message);
 
-    Map<String, Integer> getParams();
+    Map<String, String> getParams();
+
+    String getValue(String key);
 
     List<ValidationObject> validationsResult();
 
